@@ -150,8 +150,7 @@
 				$("#preview").html("<center><img src='"+URL.createObjectURL(event.target.files[0])+"' class='img-responsive' style='height=10em; width:10em;'></center>");
 			}	
 			function uploads(){
-				var file_data = $("#files");
-				console.log(file_data);
+				var file_data = $("#files").prop("files")[0];
 				var form_data = new FormData();
 				form_data.append("file",file_data);
 				$.ajax({
@@ -162,8 +161,12 @@
 					contentType:false,
 					processData:false,
 					data:form_data,
+					success:function(res){
+						console.log(res);
+					}
 					//error
 				});
+				console.log(form_data.get("file"));
 			}
 		</script>
 		</html>

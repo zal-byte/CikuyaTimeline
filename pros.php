@@ -11,7 +11,7 @@
 	// $image = Image::getInstance();
 
 	if(isset($_FILES)){
-		echo "<script>console.log('ahoy');</script>";
+		print_r($_FILES);
 	}
 
 	if(isset($_POST)){
