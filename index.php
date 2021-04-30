@@ -162,6 +162,7 @@
 					contentType:false,
 					processData:false,
 					data:form_data,
+					//error
 				});
 			}
 		</script>
