@@ -5,14 +5,13 @@
 
 	include 'lib/sql.php';
 	include 'lib/auth.php';
+	include "lib/post.php";
 	// include 'lib/image.php';
 	$sql = A::getInstance();
 	$auth = Auth::getInstance($sql);
+	$post = Post::getInstance($sql);
 	// $image = Image::getInstance();
 
-	if(isset($_FILES)){
-		print_r($_FILES);
-	}
 
 	if(isset($_POST)){
 		if(isset($_POST["login"])){
@@ -40,7 +39,13 @@
 			}
 		}
 	}
-
+	if(isset($_GET)){
+		if(isset($_GET["request"])){
+			if($_GET["request"] == "fetchTimeline"){
+				$post->fetchTimeline();
+			}
+		}
+	}
 	
 
 

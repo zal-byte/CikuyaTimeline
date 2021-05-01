@@ -1,12 +1,21 @@
 <?php
 	ob_start();
 	session_start();
+
 	if(isset($_SESSION)){
-		if(isset($_GET[md5($_SESSION["namapengguna_warga"])])){
-			if(isset($_SESSION["loged_in"])){
-				profile("pengguna");
+		if(isset($_SESSION["namapengguna_warga"])){
+			if(isset($_GET[md5($_SESSION["namapengguna_warga"])])){
+				if(isset($_SESSION["loged_in"])){
+					profile("pengguna");
+				}else{
+					profile("pengunjung");
+				}
 			}else{
-				profile("pengunjung");
+				if(isset($_SESSION["loged_in"])){
+					view("pengguna");
+				}else{
+					view("pengunjung");
+				}
 			}
 		}else{
 			if(isset($_SESSION["loged_in"])){
@@ -90,6 +99,7 @@
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/popper.min.js"></script>
 		<script type="text/javascript" src="js/kit.js"></script>
+		<script type="text/javascript" src="js/lazyload.js"></script>
 		<style type="text/css">
 			body{
 				margin:0;
@@ -169,6 +179,12 @@
 				console.log(form_data.get("file"));
 			}
 		</script>
+					<script type="text/javascript">
+		$("img").lazyload({
+
+	    effect : "fadeIn"
+
+	});</script>
 		</html>
 		<?php
 	}
@@ -195,6 +211,7 @@
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/popper.min.js"></script>
 		<script type="text/javascript" src="js/kit.js"></script>
+		<script type="text/javascript" src="js/lazyload.js"></script>
 		<style type="text/css">
 			body{
 				margin:0;
@@ -260,7 +277,7 @@
 						</a>
 					</div>
 					<div class="col">
-						<a href="?<?=$_SESSION["namapengguna_warga"];?>">
+						<a href="?<?=md5($_SESSION["namapengguna_warga"]);?>">
 							<button role="button" type="button" class="btn shadow">Profile</button>
 						</a>
 					</div>
@@ -334,15 +351,20 @@
 							<p class="text-center">
 								Buat postingan baru
 							</p>
-							<label for="judul">Judul Postingan</label>
-							<input type="text" class="form-control" id="judul" placeholder="Judul Postingan" required="true">
+<!-- 							<label for="judul">Judul Postingan</label>
+							<input type="text" class="form-control" id="judul" placeholder="Judul Postingan" required="true"> -->
 							<label for="isi">Isi Postingan</label>
 							<textarea class="form-control bimg1" rows="5" placeholder="Hari ini cerah sekali !"></textarea>
 							<label for="gambar">Tambah gambar <span style="color:darkred;">Max 10 Gambar</span></label>
 							<div class="custom-file">
-								<input type="file" name="upload[]" class="custom-file-input" id="customFile" onchange="image_preview();"  required="true"   multiple="multiple">
+								<input type="file" name="upload[]" class="custom-file-input" id="customFile" onchange="image_preview()"  required="true"   multiple="multiple">
 								<label class="custom-file-label" for="customFile">Choose File</label>
 							</div>
+
+							<div id="postPreview">
+
+							</div>
+
 							<button class="btn shadow mt-2" style="background-color: lightblue;text-shadow: 1px 1px 1px white;">Unggah</button>
 						</div>
 							<?php
@@ -351,8 +373,8 @@
 				</div>
 				<div class="col-md">
 					<p class="text-center font-weight-bold">Postingan Terbaru</p>
-					<div style="overflow-y: scroll!important; max-height: 100em;">
-						<div class="card shadow border-0 m-1">
+					<div style="overflow-y: scroll;">
+<!-- 						<div class="card shadow border-0 m-1">
 							<div class="card-body">
 								<p class="font-weight-bold">Rizal Solehudin</p>
 								<center>
@@ -387,7 +409,7 @@
 								cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 								proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 							</div>
-						</div>
+						</div> -->
 						<div id="timeline">
 
 						</div>
@@ -395,9 +417,16 @@
 				</div>
 			</div>
 		</div>
+
 		<script type="text/javascript" src="js/post.js"></script>
 		<script type="text/javascript" src="js/awuth.js"></script>
+		<script type="text/javascript">
+			$("#img").lazyload({
+				efect:"fadeIn"
+			});
+		</script>
 		<script type="text/javascript">fetchTimeline();</script>
+
 	</body>
 	</html>
 	<?php 

@@ -83,9 +83,10 @@ function logeout(){
 		data:'logout=1',
 		success:function(res){
 			if( res == "logout berhasil"){
-				window.location.href="index.php";
+				window.location.href="index.php?login";
 			}else{
 				//Huh ?
+				alert(res);
 			}
 		}
 	});
