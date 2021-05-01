@@ -37,6 +37,10 @@
 			}else{
 				echo $res["msg"];
 			}
+		}else if(isset($_POST["request"])){
+			if($_POST["request"] == "newPost"){
+				$post->newPost($_POST, $_FILES);
+			}
 		}
 	}
 	if(isset($_GET)){

@@ -144,7 +144,7 @@
 		</style>
 		</head>
 		<body>
-			<div class="jumbotron pl-1 pr-1 pt-2 pb-2 text-center">
+			<div class="jumbotron pl-1 pr-1 pt-2 pb-2 text-center shadow">
 				<a href="?upload" data-toggle="modal" data-target="#profileUpload"><img src="png/gg_men.png" class="img-responsive rounded-circle upimg " style="height: 15em; border-style: solid;border-width: 1px; border-color: black;" id="upimg"></a>
 				<p class="font-weight-bold mt-2"><?=$_SESSION["nama_warga"];?></p>
 			</div>
@@ -243,6 +243,10 @@
 				width: 100%;
 				height: 15em;
 			}
+			.device-low{
+				width: 100%;
+				height: 10em;
+			}
 		}
 		@media (min-width: 1025px){
 			.view-nav{
@@ -257,6 +261,10 @@
 			}
 			.postView{
 				display: block;
+			}
+			.device-low{
+				width: 100%;
+				height: 15em;
 			}
 		}
 		</style>
@@ -354,10 +362,10 @@
 <!-- 							<label for="judul">Judul Postingan</label>
 							<input type="text" class="form-control" id="judul" placeholder="Judul Postingan" required="true"> -->
 							<label for="isi">Isi Postingan</label>
-							<textarea class="form-control bimg1" rows="5" placeholder="Hari ini cerah sekali !"></textarea>
-							<label for="gambar">Tambah gambar <span style="color:darkred;">Max 10 Gambar</span></label>
+							<textarea class="form-control bimg1" rows="5" placeholder="Hari ini cerah sekali !" id="isi"></textarea>
+							<label for="gambar">Tambah gambar <span style="color:darkred;">Max 5 Gambar</span></label>
 							<div class="custom-file">
-								<input type="file" name="upload[]" class="custom-file-input" id="customFile" onchange="image_preview()"  required="true"   multiple="multiple">
+								<input type="file" name="upload[]" class="custom-file-input" id="customFile" onchange="image_preview()" onclick="reset()" required="true"   multiple="multiple">
 								<label class="custom-file-label" for="customFile">Choose File</label>
 							</div>
 
@@ -365,7 +373,7 @@
 
 							</div>
 
-							<button class="btn shadow mt-2" style="background-color: lightblue;text-shadow: 1px 1px 1px white;">Unggah</button>
+							<button class="btn shadow mt-2" id="sendto" style="background-color: lightblue;text-shadow: 1px 1px 1px white;" onclick="posting()">Unggah</button>
 						</div>
 							<?php
 						} ?>
