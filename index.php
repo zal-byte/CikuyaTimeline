@@ -64,6 +64,9 @@
 									<div id="preview">
 
 									</div>
+									<p id="preset">
+
+									</p>
 									<button role="button" type="button" class="btn shadow mt-2" id="upload" style="background-color: lightblue;" onclick="uploads()">Unggah</button>
 								</div>
 							</div>
@@ -81,7 +84,10 @@
 		<?php
 	}
 
-	function profile($who = "pengunjung"){
+	function profile($who = "pengunjung", $namapengguna_warga = ""){
+		
+		//Load data profile
+
 		?>
 	<!DOCTYPE html>
 	<html>
@@ -144,10 +150,30 @@
 		</style>
 		</head>
 		<body>
-			<div class="jumbotron pl-1 pr-1 pt-2 pb-2 text-center shadow">
-				<a href="?upload" data-toggle="modal" data-target="#profileUpload"><img src="png/gg_men.png" class="img-responsive rounded-circle upimg " style="height: 15em; border-style: solid;border-width: 1px; border-color: black;" id="upimg"></a>
-				<p class="font-weight-bold mt-2"><?=$_SESSION["nama_warga"];?></p>
+
+			<div class="jumbotron pl-1 pr-1 pt-0 pb-2 text-center shadow" style="border-top: 0px; ">
+			<header>
+				<div class="navbar navbar-inverse-lg">
+					<div class="container-fluid p-0">
+						<div class="card border-0 shadow p-0">
+							<div class="card-body p-2">
+								<div class="row">
+									<div class="col m-1">
+										<a href="#" onclick="window.location.href='index.php';" style="text-decoration: none">Kembali</a>
+									</div>
+									<div class="col m-1">
+										<a href="#" onclick="logeout()" style="text-decoration: none;">Keluar</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+				<a href="?upload" data-toggle="modal" data-target="#profileUpload"><img class="img-responsive rounded-circle upimg " style="height: 15em; border-style: solid;border-width: 1px; border-color: black;" id="upimg"></a>
+				<p class="font-weight-bold mt-2" id="nama_warga"></p>
 			</div>
+			<input type="text" id="namapengguna_warga" hidden="true" value="<?=$_SESSION['namapengguna_warga'];?>">
 			<section class="section">
 				<div class="container">
 
@@ -155,7 +181,19 @@
 			</section>
 			<?php profile_img_upload();?>
 		</body>
+		<script type="text/javascript" src="js/awuth.js"></script>
+		<script type="text/javascript" src="js/post.js"></script>
 				<script type="text/javascript">
+			$.ajax({
+				type:'GET',
+				url:'pros.php?request=fetchProfileData&namapengguna_warga='+$("#namapengguna_warga").val(),
+				success:function(res){
+					var json = JSON.parse(res);
+					setTimeout(function() {$("#upimg").attr("src",json.profile_warga);},900);
+					// $("#upimg").attr("src",json.profile_warga);
+					$("#nama_warga").append(json.nama_warga);
+				}
+			});
 			function profileImgPreview(){
 				$("#preview").html("<center><img src='"+URL.createObjectURL(event.target.files[0])+"' class='img-responsive' style='height=10em; width:10em;'></center>");
 			}	
@@ -163,20 +201,30 @@
 				var file_data = $("#files").prop("files")[0];
 				var form_data = new FormData();
 				form_data.append("file",file_data);
+				form_data.append("request","uploadProfile");
+				form_data.append("namapengguna_warga",$("#namapengguna_warga").val());
 				$.ajax({
 					type:'POST',
 					url:'pros.php',
-					dataType:'script',
+					// dataType:'script',
 					cache:false,
 					contentType:false,
 					processData:false,
 					data:form_data,
 					success:function(res){
-						console.log(res);
+						var jso = JSON.parse(res);
+						if(jso.status == true){
+							$("#upimg").attr("src",jso.src);
+							// console.log(jso.src);
+							$("#preview").html("");
+							$("#preset").html("<p class='font-weight-bold bg-success p-3'>Profile berhasil diperbarui</p>");
+						}else{
+							alert(res);
+						}
 					}
 					//error
 				});
-				console.log(form_data.get("file"));
+				// console.log(form_data.get("file"));
 			}
 		</script>
 					<script type="text/javascript">
@@ -199,6 +247,7 @@
 	<html>
 	<head>
 		<meta charset="utf-8">
+
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="Linimasa cikuya lebak">
 		<meta name="keyword" content="Cikuya lebak timeline">
@@ -229,6 +278,18 @@
 				font-family: google-sans;
 				src:url("font/google_sans.ttf");
 			}
+			.btn-hov:hover{
+				background-color: lightblue;
+			}
+			.btn-hov-article:hover{
+				background-color: lightblue;
+				width: 101%;
+				height: 10em;
+				margin: 2em;
+			}
+			.cursor-link:hover{
+				cursor: pointer;
+			}
 		@media (max-width: 480px){
 			.views{
 				display: none;
@@ -246,6 +307,13 @@
 			.device-low{
 				width: 100%;
 				height: 10em;
+			}
+			.device-low-comment{
+				width: 3em;
+				height: 2em;
+			}
+			.ss{
+				background-color: rgba(100,150,250, 50%);
 			}
 		}
 		@media (min-width: 1025px){
@@ -266,6 +334,10 @@
 				width: 100%;
 				height: 15em;
 			}
+			.device-low-comment{
+				width: 3em;
+				height: 2em;
+			}
 		}
 		</style>
 	</head>
@@ -274,24 +346,24 @@
 
 			?>
 		<header>
-			<div class="view-nav navbar navbar-inverse-lg container text-center m-0 pb-2" style="background-color: lightblue;">
-				<img src="png/gg_men.png" class="mb-1 img-responsive rounded-circle" style="height: 5em;">
+			<div class="view-nav navbar navbar-inverse-lg container text-center m-0 pb-2" style="background-image: url('posts/img/bgbg.jpg'); background-repeat: no-repeat; background-size: cover; color: white;">
+				<img id="mobilepp" class="mb-1 img-responsive rounded-circle" style="height: 5em;">
 				<p><?=$_SESSION["nama_warga"];?></p>
 				<hr>
 				<div class="row">
 					<div class="col">
 						<a href="#" onclick="test()" data-target="#postPost" data-toggle="collapse" aria-expanded="false" aria-controls="postPost">
-							<button role="button" type="button" class="btn shadow">Posting</button>
+							<button role="button" type="button" class="btn shadow text-white btn-hov ss">Posting</button>
 						</a>
 					</div>
 					<div class="col">
 						<a href="?<?=md5($_SESSION["namapengguna_warga"]);?>">
-							<button role="button" type="button" class="btn shadow">Profile</button>
+							<button role="button" type="button" class="btn shadow text-white btn-hov ss">Profile</button>
 						</a>
 					</div>
 					<div class="col">
 						<a href="#">
-							<button role="button" type="button" class="btn shadow" onclick="logeout()">Keluar</button>
+							<button role="button" type="button" class="btn shadow text-white btn-hov ss" onclick="logeout()">Keluar</button>
 						</a>
 					</div>
 				</div>
@@ -338,8 +410,8 @@
 							<?php
 						}else if($who == "pengguna"){
 							?>
-						<div class="card-header views " style="background-color: lightblue;">
-							<h3> Selamat datang, <?=$_SESSION["nama_warga"];?>. </h3>
+						<div class="card-header views cursor-link" style="background-image: url('posts/img/img5.jpg'); background-repeat: no-repeat;background-size: cover; background-position: center;color: white;text-shadow: 2px 2px 2px black; background-attachment: scroll;">
+							<h4>Selamat datang, <?= isset($_SESSION["nama_warga"]) ? $_SESSION["nama_warga"] : null ?></h4>
 						</div>
 						<div class="card-body postView" aria-hidden="false" id="postPost">
 							<div class="postView container text-center mb-2">
@@ -378,8 +450,47 @@
 							<?php
 						} ?>
 					</div>
+					<div class="container-fluid mt-2 postView">
+						<p class="text-center">Blog cikuya</p>
+						<div class="row">
+							<div class="col">
+								<div class="card border-0 shadow btn-hov-article cursor-link">
+									<div class="card-body pt-0 pb-0 pl-0">
+										<img src="posts/img/img6.jpg" class="img-responsive device float-left mr-2" style="height: 10em; width: 10em;">
+										<center><p class="text-center mt-1">Cikuya Lebak</p></center>
+										<hr>
+										<p>Artikel tentang Cikuya Lebak</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-1">
+							<div class="col">
+								<div class="card border-0 shadow btn-hov-article cursor-link">
+									<div class="card-body pt-0 pb-0 pl-0">
+										<img src="posts/img/img4.jpg" class="img-responsive device float-left mr-2" style="height: 10em; width: 10em;">
+										<center><p class="text-center mt-1">Masjid Ar-Rahman</p></center>
+										<hr>
+										<p>Artikel tentang Masjid Ar-Rahman</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-1">
+							<div class="col">
+								<div class="card border-0 shadow btn-hov-article cursor-link">
+									<div class="card-body pt-0 pb-0 pl-0">
+										<img src="posts/img/img7.jpg" class="img-responsive device float-left mr-2" style="height: 10em; width: 10em;">
+										<center><p class="text-center mt-1">MCK</p></center>
+										<hr>
+										<p>Artikel tentang MCK</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="col-md">
+				<div class="col">
 					<p class="text-center font-weight-bold">Postingan Terbaru</p>
 					<div style="overflow-y: scroll;">
 <!-- 						<div class="card shadow border-0 m-1">
@@ -418,23 +529,37 @@
 								proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 							</div>
 						</div> -->
+						<div class="container-fluid">
 						<div id="timeline">
 
+						</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<input type="text" id="namapengguna_warga" hidden="true" value="<?= isset($_SESSION["namapengguna_warga"]) ? $_SESSION["namapengguna_warga"] : "null"; ?>">
 		</div>
 
 		<script type="text/javascript" src="js/post.js"></script>
 		<script type="text/javascript" src="js/awuth.js"></script>
 		<script type="text/javascript">
+		
 			$("#img").lazyload({
 				efect:"fadeIn"
 			});
 		</script>
 		<script type="text/javascript">fetchTimeline();</script>
-
+		<script type="text/javascript">
+			$.ajax({
+				type:'GET',
+				url:'pros.php?request=fetchProfileData&namapengguna_warga='+$("#namapengguna_warga").val(),
+				success:function(res){
+					var js = JSON.parse(res);
+					$("#mobilepp").attr("src", js.profile_warga);
+					// console.log(js);
+				}
+			})
+		</script>
 	</body>
 	</html>
 	<?php 

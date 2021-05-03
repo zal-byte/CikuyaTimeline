@@ -31,7 +31,8 @@
 			if($this->checkUser($namapengguna_warga) == true){
 				return array("status"=>false, "msg"=>"Nama pengguna ini telah digunakan oleh orang lain");
 			}else{
-				$response = $this->sql->query("insert into warga (`nama_warga`,`nohp_warga`,`namapengguna_warga`,`katasandi_warga`) values ('".$nama_warga."','".$nohp_warga."','".$namapengguna_warga."','".md5($katasandi_warga)."')");
+
+				$response = $this->sql->query("insert into warga (`nama_warga`,`nohp_warga`,`namapengguna_warga`,`katasandi_warga`,`profile_warga`) values ('".$nama_warga."','".$nohp_warga."','".$namapengguna_warga."','".md5($katasandi_warga)."','profile/default.jpg')");
 				if($response){
 					return array("status"=>true, "msg"=>"Daftar berhasil");
 				}else{
