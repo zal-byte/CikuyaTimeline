@@ -176,7 +176,9 @@
 			<input type="text" id="namapengguna_warga" hidden="true" value="<?=$_SESSION['namapengguna_warga'];?>">
 			<section class="section">
 				<div class="container">
-
+					<div class="form-group" role="form">
+						<input type="text" id="">
+					</div>	
 				</div>
 			</section>
 			<?php profile_img_upload();?>
@@ -454,7 +456,7 @@
 						<p class="text-center">Blog cikuya</p>
 						<div class="row">
 							<div class="col">
-								<div class="card border-0 shadow btn-hov-article cursor-link">
+								<div class="card border-0 shadow btn-hov-article cursor-link" onclick="window.location.href='article/cikuya_letak.html';">
 									<div class="card-body pt-0 pb-0 pl-0">
 										<img src="posts/img/img6.jpg" class="img-responsive device float-left mr-2" style="height: 10em; width: 10em;">
 										<center><p class="text-center mt-1">Cikuya Lebak</p></center>

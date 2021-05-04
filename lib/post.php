@@ -181,6 +181,33 @@
 				$this->print(array("status"=>false, "msg"=>"Komentar gagal ditambahkan"));
 			}
 		}
+
+
+
+
+
+		////////////////////////P{rofile}
+		public function updateProfile($array){
+			$nama_warga = $array["nama_warga"];
+			$nohp_warga = $array["nohp_warga"];
+
+			$result = $this->sql->query("update warga set nama_warga='".$nama_warga."', nohp_warga='".$nohp_warga."' where namapengguna_warga='".$array["namapengguna_warga"]."'");
+			if($result){
+				$this->print(array("status"=>true, "msg"=>"Profile berhasil diperbarui"));
+			}else{
+				$this->print(array("status"=>false, "msg"=>"Profile gagal diperbarui"));
+			}
+		}
+
+		public function changePassword($array){
+			$pass = $this->fetchPass($array["namapengguna_warga"]);
+			if($)
+		}
+		function fetchPass($namapengguna_warga){
+			return $this->sql->assoc($this->sql->query("select katasandi_warga from warga where namapengguna_warga='".$namapengguna_warga."'"))["katasandi_warga"];
+		}
+
+
 		public function print($string){
 			echo json_encode($string);
 		}
