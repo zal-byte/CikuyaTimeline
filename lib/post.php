@@ -201,7 +201,7 @@
 
 		public function changePassword($array){
 			$pass = $this->fetchPass($array["namapengguna_warga"]);
-			if($)
+			if( QEWS $)
 		}
 		function fetchPass($namapengguna_warga){
 			return $this->sql->assoc($this->sql->query("select katasandi_warga from warga where namapengguna_warga='".$namapengguna_warga."'"))["katasandi_warga"];
